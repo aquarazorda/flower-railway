@@ -1,17 +1,14 @@
-import http from "http";
+import express, { Router } from "express";
+import serverless from "serverless-http";
 import fetch from "node-fetch";
-import "dotenv/config";
 
-const { MS_MAIN_URL, MS_LOGIN_URL, MS_LOGIN_EMAIL, MS_LOGIN_PASSWORD, PORT } =
+const api = express();
+const router = Router();
+
+const { MS_MAIN_URL, MS_LOGIN_URL, MS_LOGIN_EMAIL, MS_LOGIN_PASSWORD } =
   process.env;
 
-if (
-  !MS_MAIN_URL ||
-  !MS_LOGIN_URL ||
-  !MS_LOGIN_EMAIL ||
-  !MS_LOGIN_PASSWORD ||
-  !PORT
-) {
+if (!MS_MAIN_URL || !MS_LOGIN_URL || !MS_LOGIN_EMAIL || !MS_LOGIN_PASSWORD) {
   throw new Error("Missing environment variables");
 }
 
@@ -49,7 +46,7 @@ const login = async () => {
   return newCookies;
 };
 
-const server = http.createServer(async (req, res) => {
+router.get("*", async (req, res) => {
   const cookie = await login();
 
   let body = "";
@@ -73,6 +70,5 @@ const server = http.createServer(async (req, res) => {
     });
 });
 
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
-});
+api.use("/", router);
+export const handler = serverless(api);
