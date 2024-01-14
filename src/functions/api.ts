@@ -59,6 +59,7 @@ router.all("*", async (req, res) => {
       const response = await fetch(MS_MAIN_URL + req.url, {
         headers: {
           ...reusableHeaders,
+          "content-type": "application/x-www-form-urlencoded",
           cookie,
         },
         method: req.method,
