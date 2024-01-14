@@ -44,7 +44,7 @@ const login = async () => {
   return newCookies;
 };
 
-router.get("*", async (req, res) => {
+router.all("*", async (req, res) => {
   const cookie = await login();
 
   let body = "";
