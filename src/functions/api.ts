@@ -41,8 +41,6 @@ const login = async () => {
   const cid = cookies?.[1].split(", ")[1];
   const newCookies = pid + "; " + cid;
 
-  console.log(await response.text());
-
   return newCookies;
 };
 
@@ -56,6 +54,8 @@ router.get("*", async (req, res) => {
       if (body.length > 1e6) req.connection.destroy();
     })
     .on("end", async () => {
+      console.log(req.url);
+      console.log(body);
       const response = await fetch(MS_MAIN_URL + req.url, {
         headers: {
           ...reusableHeaders,
